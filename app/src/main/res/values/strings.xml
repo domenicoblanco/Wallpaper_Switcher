@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Wallpaper Switcher</string>
+    <string name="darkText">Dark Wallpaper</string>
+    <string name="darkDesc">Dark theme wallpaper</string>
+    <string name="darkButton">Set</string>
+    <string name="lightText">Light wallpaper</string>
+    <string name="lightButton">Set</string>
+    <string name="lightDesc">Light theme wallpaper</string>
+</resources>
