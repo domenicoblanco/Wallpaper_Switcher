@@ -2,7 +2,6 @@ package it.domenicoblanco.wallpaperswitcher
 
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -15,18 +14,8 @@ import java.io.*
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private val _imgPicker = Intent(Intent.ACTION_GET_CONTENT)
     private val _intentLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            when (lastClicked) {
-                R.id.darkButton -> {
-                    val imageFile = saveFile(it?.data?.data, "dark")
-                    darkImage.setImageURI(imageFile.toUri())
-                }
-                R.id.lightButton -> {
-                    val imageFile = saveFile(it?.data?.data, "light")
-                    lightImage.setImageURI(imageFile.toUri())
-                }
-            }
-            recreate()
+        when (it.resultCode) {
+            RESULT_OK -> handleWallpaperChange(it.data)
         }
     }
 
@@ -41,10 +30,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val int = Intent(applicationContext, ChangeTheme::class.java)
-            startService(int)
-        }
+        val int = Intent(applicationContext, ChangeTheme::class.java)
+        startService(int)
 
         darkButton = findViewById(R.id.darkButton)
         lightButton = findViewById(R.id.lightButton)
@@ -75,6 +62,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         return File(filesDir, fileName)
+    }
+
+    private fun handleWallpaperChange(data: Intent?) {
+        when (lastClicked) {
+            R.id.darkButton -> {
+                val imageFile = saveFile(data?.data, "dark")
+                darkImage.setImageURI(imageFile.toUri())
+            }
+            R.id.lightButton -> {
+                val imageFile = saveFile(data?.data, "light")
+                lightImage.setImageURI(imageFile.toUri())
+            }
+        }
+        recreate()
     }
 
     override fun onClick(p0: View?) {
